@@ -84,6 +84,8 @@ def press_two_keys(key_a, key_b):
         PressKey(key_dictionary[key_a])
         PressKey(key_dictionary[key_b])
         time.sleep(0.01)
+    real_key_release(key_a)
+    real_key_release(key_b)
 
 
 def run():
