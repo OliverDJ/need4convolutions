@@ -1,33 +1,32 @@
 from PIL import ImageGrab
-import os
 import numpy as np
-from time import strftime, localtime, time
-import cv2
+import scipy.misc
 
-from datetime import datetime
-
-
-
-
-def process_img(original_image):
+def process_img(original_image, resolution):
 	processed_img = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+	processed_img = compress_img(gray_scale, resolution, resolution)
 	return processed_img
 
-
-
+def compress_img(height, width):
+	return scipy.misc.imresize(original_image, (height, width))
 
 def screenGrab():
-	printscreen_pil = ImageGrab.grab(bbox=(0,40,800,640))
+	printscreen_pil = ImageGrab.grab()
 	printscreen_numpy = np.array(printscreen_pil)
 	return printscreen_numpy
-	
-		
 
-save_dir = "{}\\{}\\".format(os.getcwd(), "screen_dumps")
+def grab_and_compress_screen(resolution):
+	screen_img = screenGrab()
+	return process_img(screen_img, resolution)
 
-while True:
-	screen = screenGrab()
-	gray_scale_screen = process_img(screen)
-	cv2.imshow("window", gray_scale_screen)
-	if cv2.waitKey(25) & 0xFF == ord("q"):
-		cv2.destroyAllWindows()
+
+# save_dir = "{}\\{}\\".format(os.getcwd(), "screen_dumps")
+#
+# 	def run(self, resolution):
+# 		while True:
+# 			screen_img = screenGrab()
+# 			processed_img = process_img(screen_img)
+#
+# 			cv2.imshow("window", gray_scale_screen)
+# 			if cv2.waitKey(25) & 0xFF == ord("q"):
+# 				cv2.destroyAllWindows()
