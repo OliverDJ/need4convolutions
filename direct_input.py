@@ -67,21 +67,25 @@ key_dictionary = {"w": 0x11, "s": 0x1F, "a": 0x1E, "d": 0x20}
 #         time.sleep(0.01)
 #     real_key_release(key)
 
+def alpha_key_press(key):
+    PressKey(key_dictionary[key])
 
 def alpha_key_release(key):
     ReleaseKey(key_dictionary[key])
 
 
 def press_predicted_keys(predicted_keys):
-    for i in range(10):
+    for i in range(20):
         for key in predicted_keys:
-            PressKey(key)
-        time.sleep(0.01)
+            alpha_key_press(key)
+        time.sleep(0.001)
     for key in predicted_keys:
         alpha_key_release(key)
 
-
-#
+def press_predicted_key(key):
+    alpha_key_press(key)
+    time.sleep(2.5)
+    alpha_key_release(key)
 # def press_two_keys(key_a, key_b):
 #     for i in range(10):
 #         PressKey(key_dictionary[key_a])

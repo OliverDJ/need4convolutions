@@ -7,7 +7,7 @@ import threading
 class KeyboardListener:
     def __init__(self):
         self.key_dict = {"w":False, "s": False, "a":False, "d":False}
-        self.thread = threading.Thread(target = self.listen_to_keyboard)
+        self.thread = threading.Thread(target = self.listen_to_keyboard, daemon = True)
 
     def on_press(self, key):
         try:

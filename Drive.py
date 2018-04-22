@@ -3,7 +3,7 @@ import ScreenGrabber
 import direct_input
 from keras.models import load_model
 import time
-
+import numpy as np
 
 class Drive:
 
@@ -31,7 +31,11 @@ class Drive:
         self.artistic_sleep(5)
         while True:
             compressed_screen_img = ScreenGrabber.grab_and_compress_screen(self.resolution)
+            compressed_screen_img = np.expand_dims(compressed_screen_img, axis=0)
             prediction_array = self.model.predict(compressed_screen_img)
-            #print(prediction_array)
+            prediction_array = np.squeeze(prediction_array, axis=0)
             predicted_keys = self.prediction_to_keys(prediction_array)
-            direct_input.press_predicted_keys(predicted_keys)
+            #direct_input.press_predicted_keys(predicted_keys)
+            direct_input.press_predicted_key(predicted_keys[0])
+d = Drive("models\\shitty_model.h5")
+d.run()

@@ -5,7 +5,7 @@ import cv2
 
 def process_img(original_image, resolution):
 	#processed_img = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
-	processed_img = compress_img(processed_img, resolution, resolution)
+	processed_img = compress_img(original_image, resolution, resolution)
 	return processed_img
 
 def compress_img(image, height, width):
