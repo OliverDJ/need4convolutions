@@ -10,6 +10,17 @@ class Drive:
     def __init__(self, model_path, resolution=200):
         self.model = load_model(model_path)
         self.resolution = resolution
+        self.prediction_threshold = 0.7
+        self.pos_to_key_dict = {0: 'w', 1: 's', 2: 'a', 3: 'd'}
+
+    def prediction_to_keys(self, prediction_array):
+        predicted_keys = []
+        for i in range(len(prediction_array)):
+            if prediction_array[i] > self.prediction_threshold:
+                predicted_keys.append(self.pos_to_key_dict[i])
+        return predicted_keys
+
+
 
     def artistic_sleep(self, duration):
         for i in range(duration):
@@ -20,5 +31,7 @@ class Drive:
         self.artistic_sleep(5)
         while True:
             compressed_screen_img = ScreenGrabber.grab_and_compress_screen(self.resolution)
-            prediction = self.model.predict(compressed_screen_img)
-            print(prediction)
+            prediction_array = self.model.predict(compressed_screen_img)
+            #print(prediction_array)
+            predicted_keys = self.prediction_to_keys(prediction_array)
+            direct_input.press_predicted_keys(predicted_keys)

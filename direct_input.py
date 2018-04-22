@@ -60,22 +60,32 @@ def ReleaseKey(hexKeyCode):
 
 key_dictionary = {"w": 0x11, "s": 0x1F, "a": 0x1E, "d": 0x20}
 
+#
+# def real_key_press(key):
+#     for i in range(5):
+#         PressKey(key_dictionary[key])
+#         time.sleep(0.01)
+#     real_key_release(key)
 
-def real_key_press(key):
-    for i in range(5):
-        PressKey(key_dictionary[key])
-        time.sleep(0.01)
-    real_key_release(key)
 
-
-def real_key_release(key):
+def alpha_key_release(key):
     ReleaseKey(key_dictionary[key])
 
 
-def press_two_keys(key_a, key_b):
+def press_predicted_keys(predicted_keys):
     for i in range(10):
-        PressKey(key_dictionary[key_a])
-        PressKey(key_dictionary[key_b])
+        for key in predicted_keys:
+            PressKey(key)
         time.sleep(0.01)
-    real_key_release(key_a)
-    real_key_release(key_b)
+    for key in predicted_keys:
+        alpha_key_release(key)
+
+
+#
+# def press_two_keys(key_a, key_b):
+#     for i in range(10):
+#         PressKey(key_dictionary[key_a])
+#         PressKey(key_dictionary[key_b])
+#         time.sleep(0.01)
+#     real_key_release(key_a)
+#     real_key_release(key_b)
