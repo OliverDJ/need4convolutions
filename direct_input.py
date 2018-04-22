@@ -5,6 +5,8 @@ SendInput = ctypes.windll.user32.SendInput
 
 # C struct redefinitions
 PUL = ctypes.POINTER(ctypes.c_ulong)
+
+
 class KeyBdInput(ctypes.Structure):
     _fields_ = [("wVk", ctypes.c_ushort),
                 ("wScan", ctypes.c_ushort),
@@ -12,69 +14,63 @@ class KeyBdInput(ctypes.Structure):
                 ("time", ctypes.c_ulong),
                 ("dwExtraInfo", PUL)]
 
+
 class HardwareInput(ctypes.Structure):
     _fields_ = [("uMsg", ctypes.c_ulong),
                 ("wParamL", ctypes.c_short),
                 ("wParamH", ctypes.c_ushort)]
+
 
 class MouseInput(ctypes.Structure):
     _fields_ = [("dx", ctypes.c_long),
                 ("dy", ctypes.c_long),
                 ("mouseData", ctypes.c_ulong),
                 ("dwFlags", ctypes.c_ulong),
-                ("time",ctypes.c_ulong),
+                ("time", ctypes.c_ulong),
                 ("dwExtraInfo", PUL)]
+
 
 class Input_I(ctypes.Union):
     _fields_ = [("ki", KeyBdInput),
-                 ("mi", MouseInput),
-                 ("hi", HardwareInput)]
+                ("mi", MouseInput),
+                ("hi", HardwareInput)]
+
 
 class Input(ctypes.Structure):
     _fields_ = [("type", ctypes.c_ulong),
                 ("ii", Input_I)]
 
+
 # Actuals Functions
 def PressKey(hexKeyCode):
     extra = ctypes.c_ulong(0)
     ii_ = Input_I()
-    ii_.ki = KeyBdInput( 0, hexKeyCode, 0x0008, 0, ctypes.pointer(extra) )
-    x = Input( ctypes.c_ulong(1), ii_ )
+    ii_.ki = KeyBdInput(0, hexKeyCode, 0x0008, 0, ctypes.pointer(extra))
+    x = Input(ctypes.c_ulong(1), ii_)
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
+
 
 def ReleaseKey(hexKeyCode):
     extra = ctypes.c_ulong(0)
     ii_ = Input_I()
-    ii_.ki = KeyBdInput( 0, hexKeyCode, 0x0008 | 0x0002, 0, ctypes.pointer(extra) )
-    x = Input( ctypes.c_ulong(1), ii_ )
+    ii_.ki = KeyBdInput(0, hexKeyCode, 0x0008 | 0x0002, 0, ctypes.pointer(extra))
+    x = Input(ctypes.c_ulong(1), ii_)
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 
+key_dictionary = {"w": 0x11, "s": 0x1F, "a": 0x1E, "d": 0x20}
 
-
-key_dictionary = {"w":0x11, "s":0x1F, "a":0x1E, "d":0x20 }
 
 def real_key_press(key):
-    for i in range(10):
+    for i in range(5):
         PressKey(key_dictionary[key])
-        time.sleep(0.01)
-
-def real_key_release(key):
-    ReleaseKey(key_dictionary[key])
-
-
-def press_real_key_k_times(key, k):
-    print("---", key, k)
-    for i in range(k):
-        real_key_press(key)
         time.sleep(0.01)
     real_key_release(key)
 
 
-def artistic_sleep(duration):
-    for i in range(duration):
-        print(i+1)
-        time.sleep(1)
+def real_key_release(key):
+    ReleaseKey(key_dictionary[key])
+
 
 def press_two_keys(key_a, key_b):
     for i in range(10):
@@ -83,13 +79,3 @@ def press_two_keys(key_a, key_b):
         time.sleep(0.01)
     real_key_release(key_a)
     real_key_release(key_b)
-
-
-def run():
-    artistic_sleep(5)
-    for i in range(10):
-        press_two_keys("w", "d")
-    for i in range(10):
-        press_two_keys("w", "a")
-
-run()

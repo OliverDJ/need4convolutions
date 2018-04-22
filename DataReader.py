@@ -50,13 +50,10 @@ class DataReader:
         for id in id_list:
             path_name = all_image_paths[id]
             key_list = path_name.split('-')[1].split('.')[0].split('_')
-            label_list.append((self.create_one_hot_vector_from_key_list(key_list)))
-            img = cv2.imread(path_name, 0)
-
-            reshaped = img.reshape(img.shape[0], img.shape[1], 1) / 255
-            #print(reshaped.shape)
-            img_list.append(reshaped)
-        return np.array(img_list), label_list
+            label_list.append(self.create_one_hot_vector_from_key_list(key_list))
+            img = cv2.imread(path_name, 3) / 255
+            img_list.append(img)
+        return np.array(img_list), np.array(label_list)
 
     def create_one_hot_vector_from_key_list(self, key_list):
         one_hot_vec = np.zeros(shape=(self.one_hot_vec_size,))

@@ -35,14 +35,21 @@ def create_vgg16_model(img_width, img_height):
     # The complete model
     model = Model(inputs=base_model.input, outputs=predictions)
     # compile the model
-    model.compile(loss="categorical_crossentropy",  # or categorical_crossentropy
+    model.compile(loss="mse",  # or categorical_crossentropy
                   optimizer='adam',
                   metrics=['acc'])
     return model
 
 
+def save_model(model_save_dir, model_name, model):
+    save_path = '{}/{}'.format(model_save_dir, model_name)
+    model.save(save_path)
+
+
 if __name__ == '__main__':
     source_path = 'data'
+    model_save_dir = 'models/'
+
     img_width, img_height = 200, 200
     model = create_vgg16_model(img_width, img_height)
 
@@ -50,13 +57,15 @@ if __name__ == '__main__':
     train_images, train_labels = data_reader.get_train_data()
     val_images, val_labels = data_reader.get_val_data()
     test_images, test_labels = data_reader.get_test_data()
+    np.set_printoptions(suppress=True)
 
-    print("--_", len(train_images))
     history = model.fit(
         train_images, train_labels, validation_data=(val_images, val_labels),
-        batch_size=1, epochs=500, verbose=1)
+        batch_size=16, epochs=10, verbose=1)
 
-    self.plot_training_score(history)
+    predictions = model.predict(test_images)
 
-    evaluate = model.evaluate(test_images, test_labels, verbose=0)
-    print(evaluate)
+    for i in range(len(predictions)):
+        print(predictions[i], test_labels[i])
+
+    save_model(model_save_dir, 'shitty_model.h5', model)
